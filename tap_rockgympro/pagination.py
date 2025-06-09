@@ -4,9 +4,8 @@ from typing_extensions import override
 class RockGymProPaginator(BasePageNumberPaginator):
 
     @override
-    def __init__(self, page_size: int) -> None:
+    def __init__(self) -> None:
         super().__init__(1)
-        self.page_size = page_size
     
     @override
     def has_more(self, response):

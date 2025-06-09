@@ -11,6 +11,7 @@ from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.pagination import BaseAPIPaginator, BasePageNumberPaginator  # noqa: TC002
 from singer_sdk.streams import RESTStream
 from requests.auth import HTTPBasicAuth
+from tap_rockgympro.pagination import RockGymProPaginator
 
 if t.TYPE_CHECKING:
     import requests
@@ -30,7 +31,6 @@ class RockGymProStream(RESTStream):
     # Update this value if necessary or override `get_new_paginator`.
     next_page_token_jsonpath = "$.next_page"  # noqa: S105
 
-    page_size = 100
 
     @property
     def url_base(self) -> str:
@@ -42,8 +42,8 @@ class RockGymProStream(RESTStream):
     def authenticator(self) -> HTTPBasicAuth:
         return HTTPBasicAuth(username=self.config.get("api_user"), password=self.config.get("api_key"))
 
-    def get_new_paginator(self) -> BaseAPIPaginator:
-        return BasePageNumberPaginator(1)
+    def get_new_paginator(self):
+        return RockGymProPaginator()
 
     def get_url_params(
         self,
@@ -65,6 +65,7 @@ class RockGymProStream(RESTStream):
         if self.replication_key:
             params["sort"] = "asc"
             params["order_by"] = self.replication_key
+        params["limit"] = 200
         return params
 
     def prepare_request_payload(
