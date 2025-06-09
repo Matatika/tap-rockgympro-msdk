@@ -1,4 +1,4 @@
-`[project]
+[project]
 name = "tap-rockgympro"
 version = "0.0.1"
 description = "Singer tap for RockGymPro, built with the Meltano Singer SDK."
