@@ -11,9 +11,10 @@ from tap_rockgympro.pagination import RockGymProPaginator
 
 STREAM_TYPES = [
     streams.FacilitiesStream
-    #, streams.BookingsStream
+    , streams.BookingsStream
     , streams.CheckinsStream
     , streams.CustomersStream
+    , streams.InvoicesStream
 ]
 
 class TapRockGymPro(Tap):

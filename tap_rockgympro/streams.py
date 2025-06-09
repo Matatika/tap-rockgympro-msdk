@@ -69,3 +69,15 @@ class CustomersStream(RockGymProStream):
         params = super().get_url_params(context, next_page_token)
         params['customerGuid'] = context['customerGuid']
         return params
+
+class InvoicesStream(RockGymProStream):
+    parent_stream_type = FacilitiesStream
+    name = "invoices"
+    path = "/invoices/facility/{code}"
+    primary_keys = ["invoiceId"]
+    schema_filepath = SCHEMAS_DIR /"invoices.json"
+    records_jsonpath = "$.invoices[*]"
+    def get_url_params(self, context, next_page_token):
+        params = super().get_url_params(context, next_page_token)
+        params['startDateTime'] = self.config.get('startDateTime')
+        return params
