@@ -38,10 +38,6 @@ class BookingsStream(RockGymProStream):
     replication_key = "bookingDate"
     schema_filepath = SCHEMAS_DIR /"bookings.json"
     records_jsonpath = "$.bookings[*]"
-    def get_url_params(self, context, next_page_token):
-        params = super().get_url_params(context, next_page_token)
-        params['startDateTime'] = self.config.get('startDateTime')
-        return params
     
 class CheckinsStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
@@ -51,10 +47,6 @@ class CheckinsStream(RockGymProStream):
     replication_key = "postDate"
     schema_filepath = SCHEMAS_DIR /"checkins.json"
     records_jsonpath = "$.checkins[*]"
-    def get_url_params(self, context, next_page_token):
-        params = super().get_url_params(context, next_page_token)
-        params['startDateTime'] = self.config.get('startDateTime')
-        return params
     
     @override
     def __init__(self, *args, **kwargs) -> None:
@@ -98,7 +90,3 @@ class InvoicesStream(RockGymProStream):
     primary_keys = ["invoiceId"]
     schema_filepath = SCHEMAS_DIR /"invoices.json"
     records_jsonpath = "$.invoices[*]"
-    def get_url_params(self, context, next_page_token):
-        params = super().get_url_params(context, next_page_token)
-        params['startDateTime'] = self.config.get('startDateTime')
-        return params
