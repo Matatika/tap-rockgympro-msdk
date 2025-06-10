@@ -20,17 +20,17 @@ plugins:
 
     # TODO: Declare settings and their types here:
     settings:
-    - name: username
+    - name: api_user
       label: Username
       description: The username to use for authentication
 
-    - name: password
+    - name: api_key
       kind: password
       label: Password
       description: The password to use for authentication
       sensitive: true
 
-    - name: start_date
+    - name: startDateTime
       kind: date_iso8601
       label: Start Date
       description: Initial date to start extracting data from
@@ -38,10 +38,6 @@ plugins:
     # TODO: Declare required settings here:
     settings_group_validation:
     - [username, password]
-
-    # TODO: Declare default configuration values here:
-    config:
-      start_date: '2010-01-01T00:00:00Z'
 
   loaders:
   - name: target-jsonl
