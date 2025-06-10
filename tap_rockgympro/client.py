@@ -66,7 +66,7 @@ class RockGymProStream(RESTStream):
             params["sort"] = "asc"
             params["order_by"] = self.replication_key
         params["limit"] = 200
-        params['startDateTime'] = self.config.get('startDateTime')
+        params['startDateTime'] = self.get_starting_replication_key_value(context) or self.config.get('startDateTime')
         return params
 
     def prepare_request_payload(
