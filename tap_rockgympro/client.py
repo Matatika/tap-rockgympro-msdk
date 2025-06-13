@@ -103,19 +103,9 @@ class RockGymProStream(RESTStream):
             input=response.json(parse_float=decimal.Decimal),
         )
 
-    def post_process(
-        self,
-        row: dict,
-        context: Context | None = None,  # noqa: ARG002
-    ) -> dict | None:
-        """As needed, append or transform raw data to match expected structure.
-
-        Args:
-            row: An individual record from the stream.
-            context: The stream context.
-
-        Returns:
-            The updated record dictionary, or ``None`` to skip the record.
-        """
-        # TODO: Delete this method if not needed.
+    def post_process(self, row, context = None):
+        if row.get('cancelledOn') == '0000-00-00 00:00:00':
+            row['cancelledOn'] = None
+        if row.get('checkoutPostDate') == '0000-00-00 00:00:00':
+            row['checkoutPostDate'] = None
         return row

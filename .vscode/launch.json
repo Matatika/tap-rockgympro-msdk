@@ -9,11 +9,13 @@
             "type": "debugpy",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "program": "tap_rockgympro",
+            "module": "tap_rockgympro",
             "justMyCode": false,
             "args": [
                 "--config",
                 ".secrets/config.json",
+                "--state",
+                "state.json"
             ],
         },
     ]
