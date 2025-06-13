@@ -26,7 +26,7 @@ class TapRockGymPro(Tap):
     config_jsonschema = th.PropertiesList(
         th.Property("api_user", th.StringType, required=True),
         th.Property("api_key", th.StringType, required=True),
-        th.Property("startDateTime", th.StringType)
+        th.Property("startDateTime", th.DateTimeType)
     ).to_dict()
 
     def discover_streams(self):
