@@ -34,11 +34,11 @@ class BookingsStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
     name = "bookings"
     path = "/bookings/facility/{code}"
-    primary_keys = ["booking_id"]
+    primary_keys = ["bookingId"]
     replication_key = "bookingDate"
     schema_filepath = SCHEMAS_DIR /"bookings.json"
     records_jsonpath = "$.bookings[*]"
-    
+
 class CheckinsStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
     name = "checkins"
@@ -88,5 +88,6 @@ class InvoicesStream(RockGymProStream):
     name = "invoices"
     path = "/invoices/facility/{code}"
     primary_keys = ["invoiceId"]
+    replication_key = "invoicePostDate"
     schema_filepath = SCHEMAS_DIR /"invoices.json"
     records_jsonpath = "$.invoices[*]"
