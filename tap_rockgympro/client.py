@@ -109,3 +109,6 @@ class RockGymProStream(RESTStream):
         if row.get('checkoutPostDate') == '0000-00-00 00:00:00':
             row['checkoutPostDate'] = None
         return row
+    
+    def backoff_max_tries(self):
+        return 8
