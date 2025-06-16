@@ -51,7 +51,7 @@ class CheckinsStream(RockGymProStream):
     @override
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.customer_guids_buffer = BufferDeque(maxlen=150)
+        self.customer_guids_buffer = BufferDeque(maxlen=25) #Batch size limit set by rockgympro 
 
     @override
     def parse_response(self, response):
@@ -81,7 +81,7 @@ class CustomersStream(RockGymProStream):
     state_partitioning_keys = () # we don't want to store any state bookmarks for the child stream
     def get_url_params(self, context, next_page_token):
         params = super().get_url_params(context, next_page_token)
-        params['customerGuid'] = context['customer_guids']
+        params['customerGuid'] = ','.join(context['customer_guids'])
         return params
 
 class InvoicesStream(RockGymProStream):
