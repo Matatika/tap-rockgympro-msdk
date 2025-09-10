@@ -47,7 +47,16 @@ class CheckinsStream(RockGymProStream):
     replication_key = "postDate"
     schema_filepath = SCHEMAS_DIR /"checkins.json"
     records_jsonpath = "$.checkins[*]"
-    
+
+class InvoicesStream(RockGymProStream):
+    parent_stream_type = FacilitiesStream
+    name = "invoices"
+    path = "/invoices/facility/{code}"
+    primary_keys = ["invoiceId"]
+    replication_key = "invoicePostDate"
+    schema_filepath = SCHEMAS_DIR /"invoices.json"
+    records_jsonpath = "$.invoices[*]"
+
     @override
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -69,9 +78,9 @@ class CheckinsStream(RockGymProStream):
         with self.customer_guids_buffer as buf:
             if buf.flush:
                 yield {"customer_guids": buf}
-    
+
 class CustomersStream(RockGymProStream):
-    parent_stream_type = CheckinsStream
+    parent_stream_type = InvoicesStream
     name = "customers"
     path = "/customers"
     primary_keys = ["customerGuid"]
@@ -84,11 +93,3 @@ class CustomersStream(RockGymProStream):
         params['customerGuid'] = ','.join(context['customer_guids'])
         return params
 
-class InvoicesStream(RockGymProStream):
-    parent_stream_type = FacilitiesStream
-    name = "invoices"
-    path = "/invoices/facility/{code}"
-    primary_keys = ["invoiceId"]
-    replication_key = "invoicePostDate"
-    schema_filepath = SCHEMAS_DIR /"invoices.json"
-    records_jsonpath = "$.invoices[*]"
