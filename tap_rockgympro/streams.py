@@ -2,16 +2,14 @@
 
 from __future__ import annotations
 
-import typing as t
+from datetime import datetime, timedelta
 from importlib import resources
 
-from singer_sdk import typing as th  # JSON Schema typing helpers
-
-from tap_rockgympro.client import RockGymProStream
-from singer_sdk import pagination
 from singer_sdk.streams import RESTStream
 from typing_extensions import override
+
 from tap_rockgympro import BufferDeque
+from tap_rockgympro.client import RockGymProStream
 
 # TODO: Delete this is if not using json files for schema definition
 SCHEMAS_DIR = resources.files(__package__) / "schemas"
@@ -56,6 +54,20 @@ class InvoicesStream(RockGymProStream):
     replication_key = "invoicePostDate"
     schema_filepath = SCHEMAS_DIR /"invoices.json"
     records_jsonpath = "$.invoices[*]"
+
+    @override
+    def get_url_params(self, context, next_page_token):
+        params = super().get_url_params(context, next_page_token)
+
+        start_date_time = params.pop("startDateTime")
+        lookback_days = self.config.get("lookback_days")
+
+        if start_date_time and lookback_days:
+            start_dt = datetime.fromisoformat(start_date_time)
+            offset_dt = start_dt - timedelta(days=lookback_days)
+            params["startDateTime"] = offset_dt.strftime("%Y-%m-%d %H:%M:%S")
+
+        return params
 
     @override
     def __init__(self, *args, **kwargs) -> None:
