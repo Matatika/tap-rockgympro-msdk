@@ -117,7 +117,9 @@ class CustomersStream(RockGymProStream):
     replication_key = "lastRecordEdit"
     schema_filepath = SCHEMAS_DIR / "customers.json"
     records_jsonpath = "$.customer[*]"
-    state_partitioning_keys = ()  # we don't want to store any state bookmarks for the child stream
+
+    # we don't want to store any state bookmarks for the child stream
+    state_partitioning_keys = ()
 
     @override
     def get_url_params(self, context, next_page_token):
