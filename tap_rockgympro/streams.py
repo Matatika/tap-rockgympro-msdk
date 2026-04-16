@@ -22,9 +22,11 @@ class FacilitiesStream(RockGymProStream):
     schema_filepath = SCHEMAS_DIR / "facilties.json"
     records_jsonpath = "$.facilities.*"
 
+    @override
     def get_new_paginator(self):
         return RESTStream.get_new_paginator(self)
 
+    @override
     def get_child_context(self, record, context):
         return {"code": record["code"]}
 
@@ -107,6 +109,7 @@ class CustomersStream(RockGymProStream):
     records_jsonpath = "$.customer[*]"
     state_partitioning_keys = ()  # we don't want to store any state bookmarks for the child stream
 
+    @override
     def get_url_params(self, context, next_page_token):
         params = super().get_url_params(context, next_page_token)
         params["customerGuid"] = ",".join(context["customer_guids"])

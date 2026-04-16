@@ -7,6 +7,7 @@ from importlib import resources
 
 from requests.auth import HTTPBasicAuth
 from singer_sdk.streams import RESTStream
+from typing_extensions import override
 
 from tap_rockgympro.pagination import RockGymProPaginator
 
@@ -31,12 +32,15 @@ class RockGymProStream(RESTStream):
         """Return the API URL root, configurable via tap settings."""
         return "https://api.rockgympro.com/v1"
 
+    @override
     @property
     def authenticator(self) -> HTTPBasicAuth:
         return HTTPBasicAuth(
-            username=self.config.get("api_user"), password=self.config.get("api_key")
+            username=self.config.get("api_user"),
+            password=self.config.get("api_key"),
         )
 
+    @override
     def get_new_paginator(self):
         return RockGymProPaginator()
 
@@ -66,6 +70,7 @@ class RockGymProStream(RESTStream):
         ) or self.config.get("startDateTime")
         return params
 
+    @override
     def post_process(self, row, context=None):
         if row.get("cancelledOn") == "0000-00-00 00:00:00":
             row["cancelledOn"] = None
@@ -73,5 +78,6 @@ class RockGymProStream(RESTStream):
             row["checkoutPostDate"] = None
         return row
 
+    @override
     def backoff_max_tries(self):
         return 8
