@@ -2,18 +2,15 @@
 
 from __future__ import annotations
 
-import decimal
 import typing as t
 from importlib import resources
 
 from requests.auth import HTTPBasicAuth
-from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 
 from tap_rockgympro.pagination import RockGymProPaginator
 
 if t.TYPE_CHECKING:
-    import requests
     from singer_sdk.helpers.types import Context
 
 
