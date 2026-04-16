@@ -59,7 +59,7 @@ class InvoicesStream(RockGymProStream):
     def get_url_params(self, context, next_page_token):
         params = super().get_url_params(context, next_page_token)
 
-        start_date_time = params.pop("startDateTime")
+        start_date_time = params.get("startDateTime")
         lookback_days = self.config.get("lookback_days")
 
         if start_date_time and lookback_days:
