@@ -17,7 +17,7 @@ SCHEMAS_DIR = resources.files(__package__) / "schemas"
 class FacilitiesStream(RockGymProStream):
     name = "facilities"
     path = "/facilities"
-    primary_keys = ["code"]
+    primary_keys = ("code",)
     # replication_key = "bookingDate"
     schema_filepath = SCHEMAS_DIR / "facilties.json"
     records_jsonpath = "$.facilities.*"
@@ -35,7 +35,7 @@ class BookingsStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
     name = "bookings"
     path = "/bookings/facility/{code}"
-    primary_keys = ["bookingId"]
+    primary_keys = ("bookingId",)
     replication_key = "bookingDate"
     schema_filepath = SCHEMAS_DIR / "bookings.json"
     records_jsonpath = "$.bookings[*]"
@@ -45,7 +45,7 @@ class CheckinsStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
     name = "checkins"
     path = "/checkins/facility/{code}"
-    primary_keys = ["checkinId"]
+    primary_keys = ("checkinId",)
     replication_key = "postDate"
     schema_filepath = SCHEMAS_DIR / "checkins.json"
     records_jsonpath = "$.checkins[*]"
@@ -55,7 +55,7 @@ class InvoicesStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
     name = "invoices"
     path = "/invoices/facility/{code}"
-    primary_keys = ["invoiceId"]
+    primary_keys = ("invoiceId",)
     replication_key = "invoicePostDate"
     schema_filepath = SCHEMAS_DIR / "invoices.json"
     records_jsonpath = "$.invoices[*]"
@@ -103,7 +103,7 @@ class CustomersStream(RockGymProStream):
     parent_stream_type = InvoicesStream
     name = "customers"
     path = "/customers"
-    primary_keys = ["customerGuid"]
+    primary_keys = ("customerGuid",)
     replication_key = "lastRecordEdit"
     schema_filepath = SCHEMAS_DIR / "customers.json"
     records_jsonpath = "$.customer[*]"
