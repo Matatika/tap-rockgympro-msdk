@@ -20,7 +20,6 @@ class FacilitiesStream(RockGymProStream):
     name = "facilities"
     path = "/facilities"
     primary_keys = ("code",)
-    # replication_key = "bookingDate"
     schema_filepath = SCHEMAS_DIR / "facilties.json"
     records_jsonpath = "$.facilities.*"
 
