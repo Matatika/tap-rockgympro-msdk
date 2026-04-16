@@ -16,26 +16,31 @@ SCHEMAS_DIR = resources.files(__package__) / "schemas"
 # TODO: - Override `UsersStream` and `GroupsStream` with your own stream definition.
 #       - Copy-paste as many times as needed to create multiple stream types.
 
+
 class FacilitiesStream(RockGymProStream):
     name = "facilities"
     path = "/facilities"
     primary_keys = ["code"]
-    #replication_key = "bookingDate"
-    schema_filepath = SCHEMAS_DIR /"facilties.json"
+    # replication_key = "bookingDate"
+    schema_filepath = SCHEMAS_DIR / "facilties.json"
     records_jsonpath = "$.facilities.*"
+
     def get_new_paginator(self):
         return RESTStream.get_new_paginator(self)
+
     def get_child_context(self, record, context):
-        return {'code':record['code']}
-    
+        return {"code": record["code"]}
+
+
 class BookingsStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
     name = "bookings"
     path = "/bookings/facility/{code}"
     primary_keys = ["bookingId"]
     replication_key = "bookingDate"
-    schema_filepath = SCHEMAS_DIR /"bookings.json"
+    schema_filepath = SCHEMAS_DIR / "bookings.json"
     records_jsonpath = "$.bookings[*]"
+
 
 class CheckinsStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
@@ -43,8 +48,9 @@ class CheckinsStream(RockGymProStream):
     path = "/checkins/facility/{code}"
     primary_keys = ["checkinId"]
     replication_key = "postDate"
-    schema_filepath = SCHEMAS_DIR /"checkins.json"
+    schema_filepath = SCHEMAS_DIR / "checkins.json"
     records_jsonpath = "$.checkins[*]"
+
 
 class InvoicesStream(RockGymProStream):
     parent_stream_type = FacilitiesStream
@@ -52,7 +58,7 @@ class InvoicesStream(RockGymProStream):
     path = "/invoices/facility/{code}"
     primary_keys = ["invoiceId"]
     replication_key = "invoicePostDate"
-    schema_filepath = SCHEMAS_DIR /"invoices.json"
+    schema_filepath = SCHEMAS_DIR / "invoices.json"
     records_jsonpath = "$.invoices[*]"
 
     @override
@@ -72,7 +78,9 @@ class InvoicesStream(RockGymProStream):
     @override
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.customer_guids_buffer = BufferDeque(maxlen=25) #Batch size limit set by rockgympro 
+        self.customer_guids_buffer = BufferDeque(
+            maxlen=25
+        )  # Batch size limit set by rockgympro
 
     @override
     def parse_response(self, response):
@@ -91,17 +99,18 @@ class InvoicesStream(RockGymProStream):
             if buf.flush:
                 yield {"customer_guids": buf}
 
+
 class CustomersStream(RockGymProStream):
     parent_stream_type = InvoicesStream
     name = "customers"
     path = "/customers"
     primary_keys = ["customerGuid"]
     replication_key = "lastRecordEdit"
-    schema_filepath = SCHEMAS_DIR /"customers.json"
+    schema_filepath = SCHEMAS_DIR / "customers.json"
     records_jsonpath = "$.customer[*]"
-    state_partitioning_keys = () # we don't want to store any state bookmarks for the child stream
+    state_partitioning_keys = ()  # we don't want to store any state bookmarks for the child stream
+
     def get_url_params(self, context, next_page_token):
         params = super().get_url_params(context, next_page_token)
-        params['customerGuid'] = ','.join(context['customer_guids'])
+        params["customerGuid"] = ",".join(context["customer_guids"])
         return params
-
