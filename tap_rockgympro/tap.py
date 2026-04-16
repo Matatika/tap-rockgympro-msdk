@@ -30,7 +30,10 @@ class TapRockGymPro(Tap):
         th.Property(
             "lookback_days",
             th.IntegerType,
-            description="Number of days to subtract from the startDateTime value.",
+            description=(
+                "Number of days to subtract from the startDateTime value. "
+                "Currently only applies for the invoices stream."
+            ),
         ),
     ).to_dict()
 
