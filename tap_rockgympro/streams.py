@@ -15,6 +15,8 @@ SCHEMAS_DIR = resources.files(__package__) / "schemas"
 
 
 class FacilitiesStream(RockGymProStream):
+    """Facilities stream."""
+
     name = "facilities"
     path = "/facilities"
     primary_keys = ("code",)
@@ -32,6 +34,8 @@ class FacilitiesStream(RockGymProStream):
 
 
 class BookingsStream(RockGymProStream):
+    """Bookings stream."""
+
     parent_stream_type = FacilitiesStream
     name = "bookings"
     path = "/bookings/facility/{code}"
@@ -42,6 +46,8 @@ class BookingsStream(RockGymProStream):
 
 
 class CheckinsStream(RockGymProStream):
+    """Check-ins stream."""
+
     parent_stream_type = FacilitiesStream
     name = "checkins"
     path = "/checkins/facility/{code}"
@@ -52,6 +58,8 @@ class CheckinsStream(RockGymProStream):
 
 
 class InvoicesStream(RockGymProStream):
+    """Invoices stream."""
+
     parent_stream_type = FacilitiesStream
     name = "invoices"
     path = "/invoices/facility/{code}"
@@ -100,6 +108,8 @@ class InvoicesStream(RockGymProStream):
 
 
 class CustomersStream(RockGymProStream):
+    """Customers stream."""
+
     parent_stream_type = InvoicesStream
     name = "customers"
     path = "/customers"
