@@ -5,7 +5,6 @@ from __future__ import annotations
 from singer_sdk import Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 
-# TODO: Import your custom stream types here:
 from tap_rockgympro import streams
 
 STREAM_TYPES = [
@@ -22,7 +21,6 @@ class TapRockGymPro(Tap):
 
     name = "tap-rockgympro"
 
-    # TODO: Update this section with the actual config values you expect:
     config_jsonschema = th.PropertiesList(
         th.Property("api_user", th.StringType, required=True),
         th.Property("api_key", th.StringType, required=True),

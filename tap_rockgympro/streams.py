@@ -11,10 +11,7 @@ from typing_extensions import override
 from tap_rockgympro import BufferDeque
 from tap_rockgympro.client import RockGymProStream
 
-# TODO: Delete this is if not using json files for schema definition
 SCHEMAS_DIR = resources.files(__package__) / "schemas"
-# TODO: - Override `UsersStream` and `GroupsStream` with your own stream definition.
-#       - Copy-paste as many times as needed to create multiple stream types.
 
 
 class FacilitiesStream(RockGymProStream):
