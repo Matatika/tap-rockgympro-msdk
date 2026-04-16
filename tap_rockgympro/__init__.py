@@ -1,5 +1,4 @@
 """Tap for RockGymPro."""
-
 from collections import deque
 
 from typing_extensions import Self, override

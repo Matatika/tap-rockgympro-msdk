@@ -7,15 +7,15 @@ from singer_sdk import typing as th  # JSON schema typing helpers
 
 # TODO: Import your custom stream types here:
 from tap_rockgympro import streams
+from tap_rockgympro.pagination import RockGymProPaginator
 
 STREAM_TYPES = [
-    streams.FacilitiesStream,
-    streams.BookingsStream,
-    streams.CheckinsStream,
-    streams.CustomersStream,
-    streams.InvoicesStream,
+    streams.FacilitiesStream
+    , streams.BookingsStream
+    , streams.CheckinsStream
+    , streams.CustomersStream
+    , streams.InvoicesStream
 ]
-
 
 class TapRockGymPro(Tap):
     """RockGymPro tap class."""
@@ -39,7 +39,6 @@ class TapRockGymPro(Tap):
 
     def discover_streams(self):
         return [stream_class(tap=self) for stream_class in STREAM_TYPES]
-
 
 if __name__ == "__main__":
     TapRockGymPro.cli()
