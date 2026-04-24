@@ -8,7 +8,6 @@ from tap_rockgympro.tap import TapRockGymPro
 
 SAMPLE_CONFIG = {
     "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    # TODO: Initialize minimal tap config
 }
 
 
@@ -17,6 +16,3 @@ TestTapRockGymPro = get_tap_test_class(
     tap_class=TapRockGymPro,
     config=SAMPLE_CONFIG,
 )
-
-
-# TODO: Create additional tests as appropriate for your tap.
