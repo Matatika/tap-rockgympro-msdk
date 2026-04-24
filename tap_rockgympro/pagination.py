@@ -1,12 +1,16 @@
+"""Pagination classes for tap-rockgympro."""
+
 from singer_sdk.pagination import BasePageNumberPaginator
 from typing_extensions import override
 
+
 class RockGymProPaginator(BasePageNumberPaginator):
+    """Rock Gym Pro paginator."""
 
     @override
     def __init__(self) -> None:
         super().__init__(1)
-    
+
     @override
     def has_more(self, response):
         paging = response.json().get("rgpApiPaging", {})
