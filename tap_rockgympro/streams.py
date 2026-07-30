@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
 from importlib import resources
 
 from singer_sdk.streams import RESTStream
@@ -70,16 +69,7 @@ class InvoicesStream(RockGymProStream):
     @override
     def get_url_params(self, context, next_page_token):
         params = super().get_url_params(context, next_page_token)
-
-        start_date_time = params.get("startDateTime")
-        lookback_days = self.config.get("lookback_days")
-
-        if start_date_time and lookback_days:
-            start_dt = datetime.fromisoformat(start_date_time)
-            offset_dt = start_dt - timedelta(days=lookback_days)
-            params["startDateTime"] = offset_dt.strftime("%Y-%m-%d %H:%M:%S")
-
-        return params
+        return self.apply_lookback(params)
 
     @override
     def __init__(self, *args, **kwargs) -> None:
@@ -124,4 +114,4 @@ class CustomersStream(RockGymProStream):
     def get_url_params(self, context, next_page_token):
         params = super().get_url_params(context, next_page_token)
         params["customerGuid"] = ",".join(context["customer_guids"])
-        return params
+        return self.apply_lookback(params)

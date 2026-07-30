@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import typing as t
+from datetime import datetime, timedelta
 from importlib import resources
 
 from requests.auth import HTTPBasicAuth
@@ -68,6 +69,30 @@ class RockGymProStream(RESTStream):
         params["startDateTime"] = self.get_starting_replication_key_value(
             context
         ) or self.config.get("startDateTime")
+        return params
+
+    def apply_lookback(self, params: dict[str, t.Any]) -> dict[str, t.Any]:
+        """Offset ``startDateTime`` backwards by the ``lookback_days`` setting.
+
+        This lets a stream re-fetch records that were edited after they were
+        last replicated but whose replication key is older than the current
+        bookmark. No-op when ``lookback_days`` is unset or ``startDateTime``
+        is not present.
+
+        Args:
+            params: The URL query parameters to adjust in place.
+
+        Returns:
+            The (possibly) adjusted URL query parameters.
+        """
+        start_date_time = params.get("startDateTime")
+        lookback_days = self.config.get("lookback_days")
+
+        if start_date_time and lookback_days:
+            start_dt = datetime.fromisoformat(start_date_time)
+            offset_dt = start_dt - timedelta(days=lookback_days)
+            params["startDateTime"] = offset_dt.strftime("%Y-%m-%d %H:%M:%S")
+
         return params
 
     @override
