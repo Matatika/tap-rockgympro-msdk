@@ -89,10 +89,20 @@ class InvoicesStream(RockGymProStream):
 
     @override
     def generate_child_contexts(self, record, context):
-        self.customer_guids_buffer.append(record["customerGuid"])
+        customer_guid = (record.get("customerGuid") or "").strip()
+
+        # some invoices have no associated customer, so skip them for the child stream
+        if customer_guid:
+            self.customer_guids_buffer.append(customer_guid)
+        else:
+            self.logger.warning(
+                "Skipping invoice %s with empty customerGuid for child streams",
+                record.get("invoiceId"),
+            )
 
         with self.customer_guids_buffer as buf:
-            if buf.flush:
+            # avoid requesting customers with an empty customerGuid filter
+            if buf.flush and buf:
                 yield {"customer_guids": buf}
 
 
